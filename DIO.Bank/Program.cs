@@ -7,6 +7,9 @@ namespace DIO.Bank
         static Banco banco;
         static string TEXTO_RETORNAR = "Pressione <Enter> para retornar ao menu principal.";
 
+        /// <summary>
+        /// Funcao que simula o menu principal do banco
+        /// </summary>
         static void Main(string[] args)
         {
             bool rodando = true;
@@ -52,6 +55,9 @@ namespace DIO.Bank
             Console.Clear();
         }
 
+        /// <summary>
+        /// O usuario consulta o extrato
+        /// </summary>
         public static void Extrato() 
         {
             AnuncioTopo(
@@ -80,6 +86,9 @@ namespace DIO.Bank
             );
         }
 
+        /// <summary>
+        /// O usuario cria uma nova conta
+        /// </summary>
         public static void NovaConta()
         {
             AnuncioTopo("Criação de conta.", "Por favor forneça os dados e aperte Enter.");
@@ -110,7 +119,7 @@ namespace DIO.Bank
             Linha();
             string senha = Perguntar("Informe a senha: "); //Senha visivel
 
-            var codigo = banco.AdicionarConta(tipo, nome, senha);
+            var codigo = banco.CriarConta(tipo, nome, senha);
             
             AnuncioTopo("Criação de conta.", "Operação concluída com êxito!");
             Linha(2);
@@ -121,6 +130,9 @@ namespace DIO.Bank
             );
         }
 
+        /// <summary>
+        /// O usuario transfere uma quantidade entre duas contas
+        /// </summary>
         public static void Transferir()
         {
             AnuncioTopo(
@@ -170,6 +182,9 @@ namespace DIO.Bank
 
         }
 
+        /// <summary>
+        /// O usuario saca uma quantidade da conta
+        /// </summary>
         public static void Sacar()
         {
             AnuncioTopo(
@@ -210,6 +225,9 @@ namespace DIO.Bank
             ); 
         }
 
+        /// <summary>
+        /// O usuario deposita uma quantidade na conta
+        /// </summary>
         public static void Depositar()
         {
             AnuncioTopo(
@@ -239,6 +257,11 @@ namespace DIO.Bank
             );
         }
 
+        /// <summary>
+        /// Limpa a tela, imprime uma linha de anuncio e uma linha de informacao
+        /// </summary>
+        /// <param name="texto"> a linha de anuncio </param>
+        /// <param name="informe"> A linha de informacao </param>
         private static void AnuncioTopo(string texto, string informe)
         {
             Console.Clear();
@@ -247,11 +270,22 @@ namespace DIO.Bank
             Console.WriteLine();
         }
 
+        /// <summary>
+        /// Imprime uma pergunta e obtem a resposta do usuario
+        /// </summary>
+        /// <param name="texto"> A pergunta </param>
+        /// <returns> A resposta infomada pelo usuario </returns>
         private static string Perguntar(string texto) {
             Console.Write(texto);
             return Console.ReadLine();
         }
 
+        /// <summary>
+        /// Imprime varias linhas de texto no console
+        /// </summary>
+        /// <param name="pressioneAoFinal"> Se o usuario precisa apertar a tecla Enter
+        /// ao termino da impressao </param>
+        /// <param name="linhas"> As linhas de texto que serao impressas </param>
         private static void Textao(bool pressioneAoFinal, params string[] linhas)
         {
             foreach(string linha in linhas)
@@ -262,12 +296,20 @@ namespace DIO.Bank
                 Console.ReadLine();
         }
 
+        /// <summary>
+        /// Imprime uma ou mais linhas no console
+        /// </summary>
+        /// <param name="quantidade"> A quantidade de linhas a serem imprimidas. </param>
         private static void Linha(int quantidade=1)
         {
             for(int i=0; i<quantidade; i++)
                 Console.WriteLine();
         }
 
+        /// <summary>
+        /// Apresenta um menu de opcoes e obtem uma escolha do usuario.
+        /// </summary>
+        /// <returns> A opcao selecionada pelo usuario. </returns>
         private static string ObterOpcao()
         {
             AnuncioTopo("DIO Bank a seu dispor!!!", "Informe a opção desejada:");
@@ -287,6 +329,12 @@ namespace DIO.Bank
             return opcao;
         }
 
+        /// <summary>
+        /// Obtem a conta do usuario.
+        /// </summary>
+        /// <returns> O codigo da conta. </returns>
+        /// <exception cref="InvalidOperationException">
+        /// Se a conta informada pelo usuario nao existe. </exception>
         private static string ObterConta()
         {
             string codigo = Perguntar("Codigo da conta: ");
@@ -301,6 +349,12 @@ namespace DIO.Bank
             return codigo;
         }
 
+        /// <summary>
+        /// Obtem um valor do usuario
+        /// </summary>
+        /// <returns> O codigo da conta criada. </returns>
+        /// <exception cref="InvalidOperationException">
+        /// Se a entrada nao corresponder a um valor valido </exception>
         private static double ObterValor()
         {
             double valor;
@@ -315,10 +369,15 @@ namespace DIO.Bank
             return valor;
         }
 
+        /// <summary>
+        /// Valida a identidade do usuario da conta
+        /// </summary>
+        /// <exception cref="InvalidOperationException">
+        /// Se a validacao falhar </exception>
         private static void ValidarIdentidade(string conta)
         {
             string senha = Perguntar("Senha: ");
-            if (!banco.Logar(conta, senha)) 
+            if (!banco.Autenticar(conta, senha)) 
             {
                 Textao(true,
                     "Senha incorreta.",

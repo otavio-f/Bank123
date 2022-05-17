@@ -5,6 +5,9 @@ using System.Linq;
 
 namespace DIO.Bank
 {
+    /// <summary>
+    /// Classe responsavel pela validacao da identidade
+    /// </summary>
     public class Identificacao
     {
         public Byte[] SenhaTemperada {get; private set;}
@@ -18,12 +21,22 @@ namespace DIO.Bank
             this.SenhaTemperada = Salgar(senha, this.Sal);
         }
 
+        /// <summary>
+        /// Verifica se a senha corresponde a senha cadastrada nessa Identidade
+        /// </summary>
+        /// <param name="senha">A senha a ser verificada.</param>
+        /// <returns> true se a senha corresponde, senao false. </returns>
         public bool Verificar(string senha)
         {
             var outra = Salgar(senha, this.Sal);
             return this.SenhaTemperada.SequenceEqual(outra);
         }
 
+        /// <summary>
+        /// Cria um array de bytes aleatorios (sal)
+        /// </summary>
+        /// <param name="tamanho">O tamanho do sal.</param>
+        /// <returns> O conjunto de bytes. </returns>
         private static Byte[] MexerSaleiro(int tamanho)
         {
             var randGen = new System.Random();
@@ -32,6 +45,13 @@ namespace DIO.Bank
             return sal;
         }
 
+        /// <summary>
+        /// Faz o procedimento de \"salt\" em uma senha.
+        /// O sal eh adicionado a senha, e entao eh criado um hash
+        /// </summary>
+        /// <param name="sal">Um array de bytes para ser adicionados no hash.</param>
+        /// <param name="senha">A senha a ser salgada.</param>
+        /// <returns> O hash da senha. </returns>
         private static Byte[] Salgar(string senha, Byte[] sal)
         {
             using(var hash = SHA256.Create())
